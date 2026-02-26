@@ -89,6 +89,8 @@ print("IP Address:", urllib.request.urlopen('https://ipv4.icanhazip.com').read()
 ```
 
 This will provide a public URL (e.g., `https://xxxx-xxxx-xx.loca.lt`) which you can open in your browser to access the interactive churn risk simulator.
+<img width="1021" height="608" alt="image" src="https://github.com/user-attachments/assets/2c32b749-d98b-42c4-9be0-8a1fb9c3a1e9" />
+
 
 ## Results
 The model evaluation section provides a comparative analysis of different models. XGBoost generally performs best, achieving high ROC-AUC scores, which is crucial for churn prediction where minimizing false negatives (missing actual churners) is important. The Streamlit app demonstrates real-time predictions based on user inputs.
