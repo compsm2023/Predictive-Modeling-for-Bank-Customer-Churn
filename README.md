@@ -89,7 +89,8 @@ print("IP Address:", urllib.request.urlopen('https://ipv4.icanhazip.com').read()
 ```
 
 This will provide a public URL (e.g., `https://xxxx-xxxx-xx.loca.lt`) which you can open in your browser to access the interactive churn risk simulator.
-<img width="1021" height="608" alt="image" src="https://github.com/user-attachments/assets/2c32b749-d98b-42c4-9be0-8a1fb9c3a1e9" />
+<img width="1910" height="961" alt="image" src="https://github.com/user-attachments/assets/27d8d85f-3661-427b-a4b5-325ff2d4401e" />
+
 
 
 ## Results
