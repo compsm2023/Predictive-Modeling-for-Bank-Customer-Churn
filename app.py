@@ -3,10 +3,14 @@ import pandas as pd
 import joblib
 import numpy as np
 
-# --- PAGE CONFIG ---
-st.set_page_config(page_title="Bank Churn Risk AI", layout="wide")
+# ---------------- PAGE CONFIG ----------------
+st.set_page_config(
+    page_title="Bank Churn Risk AI",
+    page_icon="🏦",
+    layout="wide"
+)
 
-# --- LOAD MODEL FILES ---
+# ---------------- LOAD MODEL ----------------
 @st.cache_resource
 def load_assets():
     model = joblib.load("churn_model.pkl")
@@ -16,11 +20,13 @@ def load_assets():
 
 model, scaler, feature_names = load_assets()
 
-# --- UI HEADER ---
+# ---------------- HEADER ----------------
 st.title("🏦 Customer Churn Risk Intelligence")
-st.markdown("Adjust customer parameters in the sidebar to calculate real-time risk scores.")
+st.markdown(
+    "Adjust customer parameters in the sidebar to calculate real-time churn risk scores."
+)
 
-# --- SIDEBAR INPUTS ---
+# ---------------- SIDEBAR ----------------
 st.sidebar.header("Customer Profile")
 
 age = st.sidebar.slider("Age", 18, 92, 40)
@@ -30,15 +36,20 @@ products = st.sidebar.slider("Number of Products", 1, 4, 1)
 tenure = st.sidebar.slider("Tenure (Years)", 0, 10, 5)
 salary = st.sidebar.number_input("Estimated Salary ($)", 1000.0, 200000.0, 50000.0)
 
-active = st.sidebar.radio("Active Member?", [1, 0],
-                          format_func=lambda x: "Yes" if x == 1 else "No")
-cards = st.sidebar.radio("Has Credit Card?", [1, 0],
-                         format_func=lambda x: "Yes" if x == 1 else "No")
+active = st.sidebar.radio(
+    "Active Member?", [1, 0],
+    format_func=lambda x: "Yes" if x == 1 else "No"
+)
+
+cards = st.sidebar.radio(
+    "Has Credit Card?", [1, 0],
+    format_func=lambda x: "Yes" if x == 1 else "No"
+)
 
 geo = st.sidebar.selectbox("Geography", ["France", "Germany", "Spain"])
 gender = st.sidebar.selectbox("Gender", ["Male", "Female"])
 
-# --- FEATURE ENGINEERING ---
+# ---------------- FEATURE ENGINEERING ----------------
 input_dict = {
     'CreditScore': credit_score,
     'Age': age,
@@ -59,39 +70,53 @@ input_dict = {
 
 input_df = pd.DataFrame([input_dict])
 
-# Ensure correct feature order
+# Ensure same feature order as training
 input_df = input_df[feature_names]
 
-# --- SCALING ---
+# ---------------- SCALING ----------------
 input_scaled = scaler.transform(input_df)
 
-# --- PREDICTION ---
+# ---------------- PREDICTION ----------------
 prob = model.predict_proba(input_scaled)[0][1]
 risk_percent = prob * 100
 
-# --- DISPLAY RESULTS ---
+# ---------------- DISPLAY ----------------
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("Churn Risk Score")
 
     if risk_percent > 70:
-        st.error(f"HIGH RISK: {risk_percent:.1f}%")
+        st.error(f"🔴 HIGH RISK: {risk_percent:.1f}%")
     elif risk_percent > 30:
-        st.warning(f"MEDIUM RISK: {risk_percent:.1f}%")
+        st.warning(f"🟠 MEDIUM RISK: {risk_percent:.1f}%")
     else:
-        st.success(f"LOW RISK: {risk_percent:.1f}%")
+        st.success(f"🟢 LOW RISK: {risk_percent:.1f}%")
 
-    # FIXED PROGRESS BAR (must be int 0–100)
-    st.progress(int(risk_percent))
+    # Safe integer progress (0–100)
+    st.progress(max(1, min(100, int(risk_percent))))
+
+    st.caption(f"Model Confidence Score: {prob:.4f}")
 
 with col2:
     st.subheader("Business Recommendation")
 
-    if risk_percent > 50:
-        st.write("❌ **Action:** Trigger retention campaign. Offer personalized interest rates or loyalty bonuses.")
+    if risk_percent > 70:
+        st.write("❌ Immediate retention campaign required.")
+        st.write("- Offer loyalty bonuses")
+        st.write("- Provide special interest rates")
+        st.write("- Assign relationship manager")
+    elif risk_percent > 30:
+        st.write("⚠ Monitor customer engagement.")
+        st.write("- Send personalized offers")
+        st.write("- Increase digital engagement")
     else:
-        st.write("✅ **Action:** Maintain standard engagement. Customer shows high stability.")
+        st.write("✅ Maintain standard engagement.")
+        st.write("Customer shows strong stability.")
 
 st.divider()
-st.info("This model uses XGBoost with Feature Engineering (Product Density & Engagement Interaction).")
+
+st.info(
+    "This AI model uses XGBoost with advanced Feature Engineering "
+    "(Product Density, Balance Ratio, and Engagement Interaction)."
+)
