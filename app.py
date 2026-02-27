@@ -23,11 +23,11 @@ st.markdown("Adjust customer parameters in the sidebar to calculate real-time ri
 # --- SIDEBAR INPUTS ---
 st.sidebar.header("Customer Profile")
 age = st.sidebar.slider("Age", 18, 92, 40)
-balance = st.sidebar.number_input("Balance ($")`, 0.0, 250000.0, 50000.0)
+balance = st.sidebar.number_input("Balance ($)", 0.0, 250000.0, 50000.0)
 credit_score = st.sidebar.slider("Credit Score", 300, 850, 650)
 products = st.sidebar.slider("Number of Products", 1, 4, 1)
 tenure = st.sidebar.slider("Tenure (Years)", 0, 10, 5)
-salary = st.sidebar.number_input("Estimated Salary ($")`, 1000.0, 200000.0, 50000.0)
+salary = st.sidebar.number_input("Estimated Salary ($)", 1000.0, 200000.0, 50000.0)
 active = st.sidebar.radio("Active Member?", [1, 0], format_func=lambda x: "Yes" if x==1 else "No")
 cards = st.sidebar.radio("Has Credit Card?", [1, 0], format_func=lambda x: "Yes" if x==1 else "No")
 geo = st.sidebar.selectbox("Geography", ["France", "Germany", "Spain"])
@@ -66,7 +66,7 @@ with col1:
         st.warning(f"MEDIUM RISK: {risk_percent:.1f}%")
     else:
         st.success(f"LOW RISK: {risk_percent:.1f}%")
-
+    
     st.progress(prob)
 
 with col2:
